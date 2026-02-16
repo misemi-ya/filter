@@ -33,53 +33,61 @@
         </div>
     </div>
 
-    <script>
-        const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
-        const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+<!-- admin.html の <script> タグの中身を以下に差し替える -->
 
-        // ページ読み込み時にログイン状態チェック
-        checkSession();
+<script>
+    // Supabaseのライブラリから createClient という機能を取り出す
+    const { createClient } = supabase_js;
 
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                // ログイン済みなら、管理者リストにあるかチェック
-                const email = session.user.email;
-                const { data: adminData } = await supabase.from('admins').select('*').eq('email', email).single();
+    // ▼▼▼ あなたのキー（ここは変更しない） ▼▼▼
+    const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
+    const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-                if (adminData) {
-                    // 管理者なら画面を表示
-                    showDashboard(email);
-                } else {
-                    alert("あなたは管理者として登録されていません。");
-                    logout();
-                }
+    // 'supabaseClient' という新しい名前でクライアントを作成（名前の重複を避ける）
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+    // ページ読み込み時にログイン状態チェック
+    checkSession();
+
+    async function checkSession() {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+            // ログイン済みなら、管理者リストにあるかチェック
+            const email = session.user.email;
+            const { data: adminData } = await supabaseClient.from('admins').select('*').eq('email', email).single();
+
+            if (adminData) {
+                // 管理者なら画面を表示
+                showDashboard(email);
+            } else {
+                alert("あなたは管理者として登録されていません。");
+                await logout(); // await を追加して確実にログアウト
             }
         }
+    }
 
-// admin.html の login 関数を修正
-async function login() {
-    await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { 
-            // ログイン後に戻ってくるURLを自分のドメインに指定
-            redirectTo: 'https://filter.misemi-ya.net' 
-        }
-    });
-}
+    async function login() {
+        // redirectTo を自分のドメインに指定
+        await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: { 
+                redirectTo: 'https://filter.misemi-ya.net/admin.html' // 戻り先を明記
+            }
+        });
+    }
 
-        async function logout() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        }
+    async function logout() {
+        await supabaseClient.auth.signOut();
+        window.location.reload();
+    }
 
-        function showDashboard(email) {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('user-email').innerText = email;
-            // ここでログ取得などの関数を実行
-        }
-    </script>
+    function showDashboard(email) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('user-email').innerText = email;
+        // ここでログ取得などの関数を実行
+    }
+</script>
 </body>
 </html>
