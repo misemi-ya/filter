@@ -37,44 +37,65 @@
 
 <!-- admin.html の <script> タグの中身を、以下に丸ごと差し替えてください -->
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // ===============================================
-    // 1. 必要な道具（変数や定数）を最初にすべて準備する
-    // ===============================================
-    const { createClient } = supabase_js;
+    // 1. プログラムが開始されたか確認
+    alert("デバッグ1: スクリプト開始");
 
-    const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
-    const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
+    let supabaseClient;
 
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    try {
+        // CDNから読み込まれたグローバルな 'supabase' オブジェクトを使用
+        // ※ ここで supabase_js ではなく supabase を使うのが一般的です
+        const { createClient } = supabase; 
+        
+        const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
+        const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
 
+        supabaseClient = createClient(supabaseUrl, supabaseKey);
+        
+        alert("デバッグ2: Supabase初期化成功");
+    } catch (e) {
+        alert("エラー発生(初期化時): " + e.message);
+    }
 
-    // ===============================================
-    // 2. これから使う関数（機能）の作り方をすべて定義する
-    // ===============================================
     async function checkSession() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session) {
-            const email = session.user.email;
-            const { data: adminData } = await supabaseClient.from('admins').select('*').eq('email', email).single();
-            if (adminData) {
-                showDashboard(email);
+        try {
+            alert("デバッグ3: セッションチェック開始");
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error) throw error;
+
+            if (session) {
+                const email = session.user.email;
+                alert("ログイン中: " + email);
+                const { data: adminData } = await supabaseClient.from('admins').select('*').eq('email', email).single();
+                if (adminData) {
+                    showDashboard(email);
+                } else {
+                    alert("管理者未登録のアカウントです。");
+                    await logout();
+                }
             } else {
-                alert("あなたはこのコンソールの管理者として登録されていません。");
-                await logout();
+                alert("未ログイン状態です。ボタンを押してログインしてください。");
             }
+        } catch (e) {
+            alert("エラー発生(セッションチェック時): " + e.message);
         }
     }
 
     async function login() {
-        const { error } = await supabaseClient.auth.signInWithOAuth({
-            provider: 'google',
-            options: { 
-                redirectTo: 'https://filter.misemi-ya.net/admin.html'
-            }
-        });
-        if (error) {
-            alert("ログインエラー: " + error.message);
+        alert("デバッグ: ログインボタンが反応しました");
+        try {
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+                options: { 
+                    redirectTo: 'https://filter.misemi-ya.net/admin.html'
+                }
+            });
+            if (error) alert("ログインエラー: " + error.message);
+        } catch (e) {
+            alert("予期せぬエラー: " + e.message);
         }
     }
 
@@ -87,15 +108,10 @@
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('user-email').innerText = email;
-        // ここで、管理画面のログ表示などの初期化処理を呼び出す
     }
 
-
-    // ===============================================
-    // 3. すべての準備が終わったら、最初の処理を開始する
-    // ===============================================
+    // 最後に実行
     checkSession();
-
 </script>
 </body>
 </html>
