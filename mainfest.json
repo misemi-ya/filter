@@ -1,0 +1,21 @@
+{
+  "name": "ミセフィルター Pro",
+  "version": "1.0",
+  "manifest_version": 3,
+"permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "alarms",
+    "identity", 
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+
+  
+}
+
