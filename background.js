@@ -70,7 +70,7 @@ async function checkScreenAndJudge() {
 
       // 有害(ゲーム/動画)ならブロック画面へ
       if (result.isBlocked) {
-        chrome.tabs.update(tab.id, { url: "https://school-warning.vercel.app" });
+        chrome.tabs.update(tab.id, { url: "https://filter.misemi-ya.net/blocked.html" });
       }
     });
   });
