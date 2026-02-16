@@ -69,17 +69,37 @@
 
 // admin.html の login() 関数を書き換える
 
+// admin.html の login() 関数を、以下のコードに丸ごと書き換える
+
 async function login() {
-    alert("ログインボタンが押されました！"); // ★この行を追加★
+    // このポップアップは、関数が動いていることを確認するためだけのものです
+    // alert("これからGoogleに接続します..."); 
 
-    await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: { 
-            redirectTo: 'https://filter.misemi-ya.net/admin.html' 
+    try {
+        // supabaseの処理を data と error に分けて受け取る
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: { 
+                redirectTo: 'https://filter.misemi-ya.net/admin.html' 
+            }
+        });
+
+        // もしエラーオブジェクトに内容があれば、それをポップアップで表示する
+        if (error) {
+            alert("エラーが検出されました！\n\nエラー内容:\n" + error.message);
+            console.error('Supabase Auth Error:', error); // コンソールにも詳細を記録
+        } else {
+            // エラーがない場合、通常はGoogleのページに移動するはず
+            // もし移動しない場合は、ポップアップブロッカーなどを確認
+            alert("エラーはありませんでした。Googleのログインページに移動します。");
         }
-    });
-}
 
+    } catch (e) {
+        // 予期せぬエラーをキャッチ
+        alert("予期せぬJavaScriptエラーが発生しました！\n\nエラー内容:\n" + e.message);
+        console.error('Unexpected Error:', e);
+    }
+}
     async function logout() {
         await supabaseClient.auth.signOut();
         window.location.reload();
