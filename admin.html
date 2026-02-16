@@ -10,139 +10,130 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans">
 
-    <!-- ▼▼▼ ログイン画面 ▼▼▼ -->
+    <!-- ▼ ログイン画面 ▼ -->
     <div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-            <h1 class="text-2xl font-bold mb-2 text-slate-800">先生用ログイン</h1>
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center border">
+            <h1 class="text-2xl font-bold mb-2">先生用ログイン</h1>
             <p class="text-slate-500 mb-6 text-sm">Google Workspace アカウント</p>
             <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2 shadow-md">
                 <i class="fa-brands fa-google"></i> Googleでログイン
             </button>
-            <p id="login-status" class="mt-4 text-xs text-red-500 min-h-[1rem]"></p>
+            <p id="login-status" class="mt-4 text-xs text-red-500"></p>
         </div>
     </div>
 
-    <!-- ▼▼▼ ダッシュボード（ログイン後） ▼▼▼ -->
+    <!-- ▼ ダッシュボード（ログイン後） ▼ -->
     <div id="dashboard" class="hidden min-h-screen">
-        
         <!-- ヘッダー -->
         <header class="bg-white shadow sticky top-0 z-50">
-            <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
                         <i class="fa-solid fa-shield-halved text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold leading-tight">ミセフィルター <span class="text-blue-600">Pro</span></h1>
-                        <p class="text-xs text-slate-500" id="user-email">読み込み中...</p>
+                        <h1 class="text-xl font-bold leading-tight uppercase tracking-tight">MiseFilter <span class="text-blue-600">Pro</span></h1>
+                        <p class="text-[10px] text-slate-400 font-mono uppercase tracking-widest" id="user-email">loading...</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="text-sm text-slate-400 hover:text-red-500 transition">
-                    <i class="fa-solid fa-right-from-bracket"></i> ログアウト
+                <button onclick="logout()" class="text-xs text-slate-400 hover:text-red-500 transition border px-3 py-1 rounded-full border-slate-200">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> LOGOUT
                 </button>
             </div>
         </header>
 
-        <main class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+        <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
             
-            <!-- 1. メインスイッチ -->
-            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h2 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-toggle-on text-blue-500"></i> モード切替
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- 勉強モード -->
-                    <button onclick="setMode('study')" id="btn-study" class="relative group p-6 rounded-xl border-2 transition-all duration-200 text-left flex items-start gap-4 hover:shadow-md">
-                        <div class="p-3 rounded-lg bg-red-100 text-red-600 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-book-open text-2xl"></i>
-                        </div>
-                        <div>
-                            <span class="block text-lg font-bold text-slate-800">フィルターON (勉強)</span>
-                            <span class="text-sm text-slate-500">不適切なサイトをブロックします</span>
-                        </div>
-                        <div id="check-study" class="absolute top-4 right-4 text-red-500 hidden"><i class="fa-solid fa-circle-check text-2xl"></i></div>
-                    </button>
+            <!-- 1. モード切替パネル -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="setMode('study')" id="btn-study" class="relative overflow-hidden p-6 rounded-2xl border-2 transition-all flex items-center gap-5 bg-white shadow-sm">
+                    <div class="w-14 h-14 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <span class="block text-xl font-black text-slate-800 uppercase italic">Study Mode</span>
+                        <span class="text-sm text-slate-400">フィルターを有効化し閲覧を制限</span>
+                    </div>
+                    <div id="check-study" class="ml-auto text-red-500 hidden"><i class="fa-solid fa-circle-check text-2xl"></i></div>
+                </button>
 
-                    <!-- 自由モード -->
-                    <button onclick="setMode('free')" id="btn-free" class="relative group p-6 rounded-xl border-2 transition-all duration-200 text-left flex items-start gap-4 hover:shadow-md">
-                        <div class="p-3 rounded-lg bg-green-100 text-green-600 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-face-smile-beam text-2xl"></i>
-                        </div>
-                        <div>
-                            <span class="block text-lg font-bold text-slate-800">フィルター解除 (自由)</span>
-                            <span class="text-sm text-slate-500">制限なしで閲覧できます</span>
-                        </div>
-                        <div id="check-free" class="absolute top-4 right-4 text-green-500 hidden"><i class="fa-solid fa-circle-check text-2xl"></i></div>
-                    </button>
-                </div>
+                <button onclick="setMode('free')" id="btn-free" class="relative overflow-hidden p-6 rounded-2xl border-2 transition-all flex items-center gap-5 bg-white shadow-sm">
+                    <div class="w-14 h-14 rounded-xl bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-face-smile-beam text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <span class="block text-xl font-black text-slate-800 uppercase italic">Free Mode</span>
+                        <span class="text-sm text-slate-400">全ての制限を解除し自由閲覧</span>
+                    </div>
+                    <div id="check-free" class="ml-auto text-green-500 hidden"><i class="fa-solid fa-circle-check text-2xl"></i></div>
+                </button>
             </section>
 
-            <!-- 2. カテゴリ設定 (勉強モードの時のみ有効) -->
-            <section id="category-settings" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-opacity duration-300">
-                <h2 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-blue-500"></i> ブロックするカテゴリ
-                </h2>
-                <p class="text-sm text-slate-500 mb-6">チェックを入れるとブロックされます。（フィルターONの時のみ有効）</p>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <!-- ゲーム -->
-                    <label class="cursor-pointer bg-slate-50 p-4 rounded-xl border hover:bg-slate-100 transition flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-gamepad text-purple-500 text-xl"></i>
-                            <span class="font-bold text-slate-700">ゲーム</span>
-                        </div>
-                        <input type="checkbox" id="cat-game" onchange="toggleCategory('block_game')" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500">
-                    </label>
-
-                    <!-- 動画 -->
-                    <label class="cursor-pointer bg-slate-50 p-4 rounded-xl border hover:bg-slate-100 transition flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-brands fa-youtube text-red-500 text-xl"></i>
-                            <span class="font-bold text-slate-700">動画サイト</span>
-                        </div>
-                        <input type="checkbox" id="cat-video" onchange="toggleCategory('block_video')" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500">
-                    </label>
-
-                    <!-- SNS -->
-                    <label class="cursor-pointer bg-slate-50 p-4 rounded-xl border hover:bg-slate-100 transition flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-brands fa-twitter text-blue-400 text-xl"></i>
-                            <span class="font-bold text-slate-700">SNS・掲示板</span>
-                        </div>
-                        <input type="checkbox" id="cat-social" onchange="toggleCategory('block_social')" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500">
-                    </label>
+            <!-- 2. カテゴリー詳細設定（50種類） -->
+            <section id="category-settings" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-800 uppercase italic italic">Category Filter Settings</h2>
+                        <p class="text-sm text-slate-400 mt-1">AIが判定する50個のカテゴリーごとのブロック設定です。</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-[.2em]">Total 50 Categories</span>
+                    </div>
                 </div>
+
+                <!-- ここにJSでカテゴリーが生成される -->
+                <div id="category-settings-container" class="space-y-8"></div>
             </section>
 
         </main>
     </div>
 
-    <!-- ▼▼▼ スクリプト ▼▼▼ -->
     <script>
         const { createClient } = supabase;
-        // ★ここにあなたのURLとキーを入れてください★
         const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
         const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
-        
         const sb = createClient(supabaseUrl, supabaseKey);
 
-        // ページ読み込み時に実行
+        // カテゴリー50個の定義
+        const CATEGORIES = {
+            "ENTERTAINMENT & HOBBY": {
+                "game": "ゲーム", "video": "動画サイト", "manga": "漫画・コミック", "anime": "アニメ",
+                "music": "音楽配信", "art": "芸術・アート", "photography": "写真・カメラ", "other": "その他娯楽"
+            },
+            "HARMFUL & RESTRICTED": {
+                "adult": "アダルト", "gambling": "ギャンブル", "weapons": "武器・兵器", "drugs": "違法薬物", 
+                "violence": "暴力・猟奇", "tobacco": "タバコ", "alcohol": "お酒", "dating": "出会い系", "occult": "オカルト"
+            },
+            "SOCIAL & COMMUNICATION": {
+                "sns": "SNS", "chat": "チャット・掲示板", "auctions": "オークション", "ads": "広告・宣伝"
+            },
+            "LIFE & PRACTICAL": {
+                "shopping": "買い物", "finance": "金融・資産", "jobsearch": "求人", "realestate": "不動産",
+                "travel": "旅行", "fashion": "ファッション", "beauty": "美容", "health": "健康", "fitness": "運動",
+                "cooking": "料理", "pets": "ペット", "gardening": "園芸", "diy": "DIY", "vehicles": "乗り物"
+            },
+            "INFO & EDUCATION": {
+                "news": "ニュース", "politics": "政治", "government": "行政", "military": "軍事",
+                "legal": "法律", "education": "教育", "reference": "辞書・図鑑", "science": "科学",
+                "technology": "最新技術", "programming": "IT・開発", "spirituality": "精神世界", "religion": "宗教", 
+                "astrology": "占い", "crafts": "手芸・工作"
+            }
+        };
+
+        let currentSettings = {};
+
+        // ページ初期化
         init();
 
         async function init() {
-            // セッションチェック
             const { data: { session } } = await sb.auth.getSession();
-            
             if (session) {
-                // 管理者チェック
                 const email = session.user.email;
                 const { data: admin } = await sb.from('admins').select('*').eq('email', email).single();
-                
                 if (admin) {
                     showDashboard(email);
-                    loadSettings(); // 設定を読み込む
-                    subscribeChanges(); // リアルタイム同期開始
+                    await loadSettings();
+                    subscribeChanges();
                 } else {
                     document.getElementById('login-status').innerText = "管理者権限がありません";
                     await sb.auth.signOut();
@@ -150,102 +141,103 @@
             }
         }
 
-        // ログイン処理
-        async function login() {
-            const { error } = await sb.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: 'https://filter.misemi-ya.net/admin.html' }
-            });
-            if (error) alert("ログインエラー: " + error.message);
-        }
-
-        // ログアウト処理
-        async function logout() {
-            await sb.auth.signOut();
-            window.location.reload();
-        }
-
-        // 画面表示切替
         function showDashboard(email) {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.getElementById('user-email').innerText = email;
         }
 
-        // 設定を読み込んで画面に反映
-        async function loadSettings() {
-            const { data } = await sb.from('policies').select('*').single();
-            if (data) updateUI(data);
+        // カテゴリーUI生成
+        function renderCategoryGroups() {
+            const container = document.getElementById('category-settings-container');
+            container.innerHTML = '';
+
+            for (const [groupName, items] of Object.entries(CATEGORIES)) {
+                let html = `<div class="fade-in">
+                    <h3 class="text-xs font-black text-blue-600 mb-4 tracking-widest border-l-4 border-blue-600 pl-3">${groupName}</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">`;
+                
+                for (const [id, name] of Object.entries(items)) {
+                    html += `
+                        <label class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl hover:bg-white hover:border-blue-200 cursor-pointer transition-all shadow-sm">
+                            <span class="text-xs font-bold text-slate-600">${name}</span>
+                            <input type="checkbox" id="cat-${id}" onchange="updateCategorySetting('${id}')" 
+                                class="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500">
+                        </label>`;
+                }
+                html += `</div></div>`;
+                container.innerHTML += html;
+            }
         }
 
-        // UIを更新する（ボタンの色などを変える）
+        async function loadSettings() {
+            const { data } = await sb.from('policies').select('*').single();
+            if (data) {
+                currentSettings = data.category_settings || {};
+                renderCategoryGroups(); // UIを生成してから
+                // 各チェックボックスの状態を復元
+                Object.keys(currentSettings).forEach(id => {
+                    const el = document.getElementById(`cat-${id}`);
+                    if (el) el.checked = currentSettings[id];
+                });
+                updateUI(data);
+            }
+        }
+
+        async function updateCategorySetting(id) {
+            currentSettings[id] = document.getElementById(`cat-${id}`).checked;
+            await sb.from('policies').update({ category_settings: currentSettings }).eq('id', 1);
+        }
+
+        async function setMode(newMode) {
+            await sb.from('policies').update({ mode: newMode }).eq('id', 1);
+            // updateUIはリアルタイム監視(subscribeChanges)が検知して自動で動きます
+        }
+
         function updateUI(policy) {
             const btnStudy = document.getElementById('btn-study');
             const btnFree = document.getElementById('btn-free');
             const checkStudy = document.getElementById('check-study');
             const checkFree = document.getElementById('check-free');
-            const catSettings = document.getElementById('category-settings');
+            const catArea = document.getElementById('category-settings');
 
             // リセット
-            btnStudy.className = "relative group p-6 rounded-xl border-2 transition-all duration-200 text-left flex items-start gap-4 hover:shadow-md border-transparent bg-white";
-            btnFree.className = "relative group p-6 rounded-xl border-2 transition-all duration-200 text-left flex items-start gap-4 hover:shadow-md border-transparent bg-white";
-            checkStudy.classList.add('hidden');
-            checkFree.classList.add('hidden');
+            [btnStudy, btnFree].forEach(b => b.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'ring-4', 'ring-slate-100'));
+            [checkStudy, checkFree].forEach(c => c.classList.add('hidden'));
 
             if (policy.mode === 'study') {
-                btnStudy.classList.replace('border-transparent', 'border-red-500');
-                btnStudy.classList.replace('bg-white', 'bg-red-50');
+                btnStudy.classList.add('border-red-500', 'bg-red-50', 'ring-4', 'ring-red-50');
                 checkStudy.classList.remove('hidden');
-                catSettings.classList.remove('opacity-50', 'pointer-events-none');
+                catArea.classList.remove('opacity-40', 'pointer-events-none');
             } else {
-                btnFree.classList.replace('border-transparent', 'border-green-500');
-                btnFree.classList.replace('bg-white', 'bg-green-50');
+                btnFree.classList.add('border-green-500', 'bg-green-50', 'ring-4', 'ring-green-50');
                 checkFree.classList.remove('hidden');
-                catSettings.classList.add('opacity-50', 'pointer-events-none'); // 自由モード時はカテゴリ設定を薄くする
+                catArea.classList.add('opacity-40', 'pointer-events-none');
             }
-
-            // チェックボックスの状態反映
-            document.getElementById('cat-game').checked = policy.block_game;
-            document.getElementById('cat-video').checked = policy.block_video;
-            document.getElementById('cat-social').checked = policy.block_social;
         }
 
-        // モード変更（DB更新）
-        async function setMode(newMode) {
-            // 先にUIだけ変えてサクサク感を出す
-            const currentPolicy = {
-                mode: newMode,
-                block_game: document.getElementById('cat-game').checked,
-                block_video: document.getElementById('cat-video').checked,
-                block_social: document.getElementById('cat-social').checked
-            };
-            updateUI(currentPolicy);
-
-            // 裏でDB更新
-            await sb.from('policies').update({ mode: newMode }).eq('id', 1);
-        }
-
-        // カテゴリ変更（DB更新）
-        async function toggleCategory(columnName) {
-            const isChecked = event.target.checked;
-            
-            // 裏でDB更新
-            const updateData = {};
-            updateData[columnName] = isChecked;
-            await sb.from('policies').update(updateData).eq('id', 1);
-        }
-
-        // リアルタイム同期（他の先生が操作した場合に反映）
         function subscribeChanges() {
-            sb.channel('custom-all-channel')
-            .on(
-                'postgres_changes',
-                { event: 'UPDATE', schema: 'public', table: 'policies' },
-                (payload) => {
-                    updateUI(payload.new);
+            sb.channel('db-changes')
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'policies' }, payload => {
+                updateUI(payload.new);
+                // カテゴリ設定も他から更新されたら反映
+                if (payload.new.category_settings) {
+                    currentSettings = payload.new.category_settings;
+                    Object.keys(currentSettings).forEach(id => {
+                        const el = document.getElementById(`cat-${id}`);
+                        if (el) el.checked = currentSettings[id];
+                    });
                 }
-            )
-            .subscribe();
+            }).subscribe();
+        }
+
+        async function login() {
+            await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+        }
+
+        async function logout() {
+            await sb.auth.signOut();
+            window.location.reload();
         }
     </script>
 </body>

@@ -2,6 +2,9 @@
   "name": "ミセフィルター Pro",
   "version": "1.0",
   "manifest_version": 3,
+    "action": {
+    "default_icon": "ok.png"
+  },
 "permissions": [
     "declarativeNetRequest",
     "storage",
