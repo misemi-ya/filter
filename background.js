@@ -4,6 +4,10 @@ const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
 const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
 const GEMINI_API_KEY = 'AIzaSyA73wZvsF9_tTOFm3cDHV5Vq06qh_e9HiU'; // Geminiのキー
 const supabase = createClient(supabaseUrl, supabaseKey);
+// background.js の修正箇所
+
+// ブロック時の飛ばし先を自分のドメインにする
+const BLOCK_PAGE_URL = "https://filter.misemi-ya.net/blocked.html";
 
 let currentMode = 'free';
 let checkInterval;
