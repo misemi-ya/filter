@@ -35,71 +35,49 @@
 
 <!-- admin.html の <script> タグの中身を以下に差し替える -->
 
+<!-- admin.html の <script> タグの中身を、以下に丸ごと差し替えてください -->
+
 <script>
-    // Supabaseのライブラリから createClient という機能を取り出す
+    // ===============================================
+    // 1. 必要な道具（変数や定数）を最初にすべて準備する
+    // ===============================================
     const { createClient } = supabase_js;
 
-    // ▼▼▼ あなたのキー（ここは変更しない） ▼▼▼
     const supabaseUrl = 'https://bjwmvbfwpvbzmjxjclgr.supabase.co';
     const supabaseKey = 'sb_publishable_Phz_7QEJR8QkFdEEuu_RFA_Jlk8J2rr';
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-    // 'supabaseClient' という新しい名前でクライアントを作成（名前の重複を避ける）
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-    // ページ読み込み時にログイン状態チェック
-    checkSession();
 
+    // ===============================================
+    // 2. これから使う関数（機能）の作り方をすべて定義する
+    // ===============================================
     async function checkSession() {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (session) {
-            // ログイン済みなら、管理者リストにあるかチェック
             const email = session.user.email;
             const { data: adminData } = await supabaseClient.from('admins').select('*').eq('email', email).single();
-
             if (adminData) {
-                // 管理者なら画面を表示
                 showDashboard(email);
             } else {
-                alert("あなたは管理者として登録されていません。");
-                await logout(); // await を追加して確実にログアウト
+                alert("あなたはこのコンソールの管理者として登録されていません。");
+                await logout();
             }
         }
     }
 
-// admin.html の login() 関数を書き換える
-
-// admin.html の login() 関数を、以下のコードに丸ごと書き換える
-
-async function login() {
-    // このポップアップは、関数が動いていることを確認するためだけのものです
-    // alert("これからGoogleに接続します..."); 
-
-    try {
-        // supabaseの処理を data と error に分けて受け取る
-        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+    async function login() {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: { 
-                redirectTo: 'https://filter.misemi-ya.net/admin.html' 
+                redirectTo: 'https://filter.misemi-ya.net/admin.html'
             }
         });
-
-        // もしエラーオブジェクトに内容があれば、それをポップアップで表示する
         if (error) {
-            alert("エラーが検出されました！\n\nエラー内容:\n" + error.message);
-            console.error('Supabase Auth Error:', error); // コンソールにも詳細を記録
-        } else {
-            // エラーがない場合、通常はGoogleのページに移動するはず
-            // もし移動しない場合は、ポップアップブロッカーなどを確認
-            alert("エラーはありませんでした。Googleのログインページに移動します。");
+            alert("ログインエラー: " + error.message);
         }
-
-    } catch (e) {
-        // 予期せぬエラーをキャッチ
-        alert("予期せぬJavaScriptエラーが発生しました！\n\nエラー内容:\n" + e.message);
-        console.error('Unexpected Error:', e);
     }
-}
+
     async function logout() {
         await supabaseClient.auth.signOut();
         window.location.reload();
@@ -109,8 +87,15 @@ async function login() {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('user-email').innerText = email;
-        // ここでログ取得などの関数を実行
+        // ここで、管理画面のログ表示などの初期化処理を呼び出す
     }
+
+
+    // ===============================================
+    // 3. すべての準備が終わったら、最初の処理を開始する
+    // ===============================================
+    checkSession();
+
 </script>
 </body>
 </html>
