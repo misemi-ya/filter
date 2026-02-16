@@ -67,15 +67,18 @@
         }
     }
 
-    async function login() {
-        // redirectTo を自分のドメインに指定
-        await supabaseClient.auth.signInWithOAuth({
-            provider: 'google',
-            options: { 
-                redirectTo: 'https://filter.misemi-ya.net/admin.html' // 戻り先を明記
-            }
-        });
-    }
+// admin.html の login() 関数を書き換える
+
+async function login() {
+    alert("ログインボタンが押されました！"); // ★この行を追加★
+
+    await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { 
+            redirectTo: 'https://filter.misemi-ya.net/admin.html' 
+        }
+    });
+}
 
     async function logout() {
         await supabaseClient.auth.signOut();
