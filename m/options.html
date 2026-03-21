@@ -1,0 +1,328 @@
+﻿<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>店大教育部作成 - ミセフィルタ</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div id="lockScreen" class="lock-screen">
+      <div class="lock-card">
+        <h2 id="lockTitle">管理画面ログイン</h2>
+        <p id="lockMessage">ID とパスワードを入力してください。</p>
+
+        <form id="loginForm" class="lock-form">
+          <label class="field">
+            <span>学校ID</span>
+            <input id="loginSchoolId" type="text" autocomplete="organization" />
+          </label>
+          <label class="field">
+            <span>ID</span>
+            <input id="loginId" type="text" autocomplete="username" />
+          </label>
+          <label class="field">
+            <span>パスワード</span>
+            <input id="loginPassword" type="password" autocomplete="current-password" />
+          </label>
+          <button class="primary" type="submit">ログイン</button>
+        </form>
+
+        <form id="setupForm" class="lock-form lock-hidden">
+          <p class="muted">初回は本部管理者アカウントを作成します。</p>
+          <label class="field">
+            <span>学校ID</span>
+            <input id="setupSchoolId" type="text" autocomplete="organization" />
+          </label>
+          <label class="field">
+            <span>管理者ID</span>
+            <input id="setupId" type="text" autocomplete="username" />
+          </label>
+          <label class="field">
+            <span>管理者パスワード</span>
+            <input id="setupPassword" type="password" autocomplete="new-password" />
+          </label>
+          <label class="field">
+            <span>確認</span>
+            <input id="setupConfirm" type="password" autocomplete="new-password" />
+          </label>
+          <button class="primary" type="submit">管理者を作成</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="nav">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <p id="brandTitle" class="brand-title">店大教育部作成 - ミセフィルタ</p>
+            <p class="brand-sub">管理コンソール</p>
+          </div>
+        </div>
+        <button class="nav-item active" data-tab="dashboard">ダッシュボード</button>
+        <button class="nav-item" data-tab="rules">ルール</button>
+        <button class="nav-item" data-tab="categories">カテゴリ</button>
+        <button class="nav-item" data-tab="night">夜間制限</button>
+        <button class="nav-item" data-tab="reports">レポート</button>
+        <button class="nav-item" data-tab="devices">デバイス</button>
+        <button class="nav-item" data-tab="settings">設定</button>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">学校向けセーフブラウジング</p>
+            <h1>フィルターポリシー</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="status">
+              <div>
+                <p class="status-label">ログイン中</p>
+                <p id="currentUserId" class="status-value">-</p>
+              </div>
+            </div>
+            <div class="status">
+              <label class="switch">
+                <input id="enabledToggle" type="checkbox" />
+                <span class="slider"></span>
+              </label>
+              <div>
+                <p class="status-label">保護</p>
+                <p id="statusText" class="status-value">有効</p>
+              </div>
+            </div>
+            <button id="logoutBtn" class="ghost">ログアウト</button>
+          </div>
+        </header>
+
+        <section class="tab active" data-tab="dashboard">
+          <div class="grid">
+            <div class="card">
+              <h2>クイック診断</h2>
+              <p class="muted">URL を入力すると自動分類と判定結果を表示します（ローカル判定）。</p>
+              <label class="field">
+                <span>診断するURL</span>
+                <input id="testUrl" type="text" placeholder="https://example.com" />
+              </label>
+              <button id="runTest" class="primary">診断</button>
+              <div class="result">
+                <p>カテゴリ: <span id="testCategory">-</span></p>
+                <p>判定: <span id="testDecision">-</span></p>
+              </div>
+            </div>
+            <div class="card">
+              <h2>現在の状態</h2>
+              <p class="muted">同期と保護の状態を確認できます。</p>
+              <div class="summary">
+                <div>
+                  <p class="label">保護</p>
+                  <p id="summaryStatus" class="count">有効</p>
+                </div>
+                <div>
+                  <p class="label">ブロックカテゴリ数</p>
+                  <p id="summaryCategories" class="count">0</p>
+                </div>
+              </div>
+              <p id="syncStatus" class="muted">Chrome 同期: 未確認</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="rules">
+          <div class="grid">
+            <div class="card">
+              <h2>許可ルール</h2>
+              <p class="muted">キーワードまたはドメインをカンマ区切りで入力。</p>
+              <label class="field">
+                <span>許可キーワード</span>
+                <input id="allowKeywords" type="text" placeholder="教育, 学習, 授業" />
+              </label>
+              <label class="field">
+                <span>許可ドメイン</span>
+                <input id="allowedDomains" type="text" placeholder="school.example.jp, library.example.com" />
+              </label>
+              <label class="field">
+                <span>許可URL（1行1件）</span>
+                <textarea id="allowedUrls" rows="4" placeholder="https://example.com/lesson"></textarea>
+              </label>
+            </div>
+
+            <div class="card">
+              <h2>ブロックルール</h2>
+              <p class="muted">キーワードまたはドメインをカンマ区切りで入力。</p>
+              <label class="field">
+                <span>ブロックキーワード</span>
+                <input id="blockKeywords" type="text" placeholder="成人向け, ギャンブル, トレント" />
+              </label>
+              <label class="field">
+                <span>ブロックドメイン</span>
+                <input id="blockedDomains" type="text" placeholder="badsite.com, example.net" />
+              </label>
+              <label class="field">
+                <span>ブロックURL（1行1件）</span>
+                <textarea id="blockedUrls" rows="4" placeholder="https://example.com/bad"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <div class="card wide">
+            <div class="row">
+              <div>
+                <h2>許可のみモード</h2>
+                <p class="muted">許可ルールに一致しないサイトはすべてブロック。</p>
+              </div>
+              <label class="switch">
+                <input id="strictToggle" type="checkbox" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="categories">
+          <div class="card wide">
+            <h2>カテゴリ別ブロック</h2>
+            <p class="muted">URL のキーワードをローカルで自動分類し、カテゴリ単位でブロックします。</p>
+            <label class="field">
+              <span>カテゴリ検索</span>
+              <input id="categorySearch" type="text" placeholder="例: エンターテイメント" />
+            </label>
+            <p id="categoryCount" class="muted">0 件</p>
+            <div id="categoryContainer" class="category-grid"></div>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="night">
+          <div class="card wide">
+            <div class="row">
+              <div>
+                <h2>夜間ブロック</h2>
+                <p class="muted">指定時間は原則ブロックします（許可リストは優先）。</p>
+              </div>
+              <label class="switch">
+                <input id="nightToggle" type="checkbox" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="field">
+                <span>開始</span>
+                <input id="nightStart" type="time" value="22:00" />
+              </label>
+              <label class="field">
+                <span>終了</span>
+                <input id="nightEnd" type="time" value="06:00" />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="reports">
+          <div class="card wide">
+            <h2>ローカルログ</h2>
+            <p class="muted">この端末での診断や操作履歴を表示します。</p>
+            <ul id="logList" class="log-list"></ul>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="devices">
+          <div class="card wide">
+            <h2>デバイスと同期</h2>
+            <p class="muted">同じ Chrome アカウントで同期が有効な端末から設定変更が可能です。</p>
+            <p class="muted">他の端末で変更した設定は、この画面を再読み込みすると反映されます。</p>
+          </div>
+        </section>
+
+        <section class="tab" data-tab="settings">
+          <div class="card">
+            <h2>表示名</h2>
+            <label class="field">
+              <span>管理画面の表示名</span>
+              <input id="displayName" type="text" />
+            </label>
+          </div>
+          <div class="card" id="schoolAdminCard">
+            <h2>学校管理</h2>
+            <p class="muted">本部管理者のみ学校を追加できます。</p>
+            <div class="row">
+              <label class="field">
+                <span>学校ID</span>
+                <input id="schoolId" type="text" placeholder="s01" />
+              </label>
+              <label class="field">
+                <span>学校名</span>
+                <input id="schoolName" type="text" placeholder="店魅偉屋大学教育部開発ミセフィルタ管理部" />
+              </label>
+            </div>
+            <button id="addSchoolBtn" class="ghost">学校を追加</button>
+            <ul id="schoolList" class="log-list"></ul>
+          </div>
+          <div class="card">
+            <h2>ユーザー管理</h2>
+            <p class="muted">本部管理者は学校管理者を追加できます。学校管理者は自校の生徒のみ追加できます。</p>
+            <div class="row">
+              <label class="field">
+                <span>学校</span>
+                <select id="userSchoolId"></select>
+              </label>
+              <label class="field">
+                <span>権限</span>
+                <select id="userRole"></select>
+              </label>
+            </div>
+            <div class="row">
+              <label class="field">
+                <span>ID</span>
+                <input id="userId" type="text" autocomplete="username" />
+              </label>
+              <label class="field">
+                <span>パスワード</span>
+                <input id="userPassword" type="password" autocomplete="new-password" />
+              </label>
+              <label class="field">
+                <span>確認</span>
+                <input id="userPasswordConfirm" type="password" autocomplete="new-password" />
+              </label>
+            </div>
+            <button id="addUserBtn" class="ghost">ユーザー追加</button>
+            <div class="bulk-box">
+              <h3>生徒一括追加</h3>
+              <p class="muted">1行ごとに `ID,パスワード` を入力してください。</p>
+              <label class="field">
+                <span>対象学校</span>
+                <select id="bulkSchoolId"></select>
+              </label>
+              <label class="field">
+                <span>一括入力</span>
+                <textarea id="bulkStudents" rows="6" placeholder="student01,password01&#10;student02,password02"></textarea>
+              </label>
+              <div class="row">
+                <button id="bulkAddBtn" class="ghost">まとめて追加</button>
+                <button id="bulkDeleteBtn" class="ghost" type="button">この学校の生徒を全削除</button>
+              </div>
+            </div>
+            <div id="userList" class="school-user-groups"></div>
+          </div>
+        </section>
+
+        <section class="card wide">
+          <div class="row">
+            <div>
+              <h2>最終更新</h2>
+              <p id="lastSaved" class="muted">未保存</p>
+            </div>
+            <div class="row">
+              <button id="resetBtn" class="ghost">リセット</button>
+              <button id="saveBtn" class="primary">変更を適用</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="categories.js"></script>
+    <script src="cloud.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

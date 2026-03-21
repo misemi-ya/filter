@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>店大教育部作成 - ミセフィルタ</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        padding: 16px;
+        width: 300px;
+        color: #1b2b23;
+      }
+      h1 {
+        font-size: 1rem;
+        margin: 0 0 6px;
+      }
+      p {
+        margin: 0 0 10px;
+        color: #5b6b61;
+        font-size: 0.85rem;
+      }
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: #2ecc75;
+        color: #0d2b19;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .ghost {
+        background: transparent;
+        border: 1px solid rgba(27, 43, 35, 0.2);
+        color: #1b2b23;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #eef7f1;
+        font-size: 0.75rem;
+      }
+      .segmented {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #eef7f1;
+        border-radius: 999px;
+        border: 1px solid rgba(27, 43, 35, 0.15);
+        overflow: hidden;
+        margin: 8px 0 10px;
+      }
+      .segment {
+        background: transparent;
+        border: none;
+        padding: 8px 10px;
+        font-weight: 600;
+        color: #1b2b23;
+        z-index: 1;
+      }
+      .segment.active {
+        color: #ffffff;
+      }
+      .thumb {
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        width: 50%;
+        background: #2ecc75;
+        border-radius: 999px;
+        transition: transform 0.2s ease;
+      }
+      .segmented[data-mode="block"] .thumb {
+        transform: translateX(100%);
+        background: #e74c3c;
+      }
+      .segmented[data-disabled="true"] {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      #status.blocked {
+        color: #c0392b;
+        font-weight: 600;
+      }
+      .login-panel {
+        margin-top: 12px;
+        border: 1px solid #e0e5ea;
+        border-radius: 12px;
+        padding: 12px;
+        background: #ffffff;
+      }
+      .login-title {
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .login-fields {
+        display: grid;
+        gap: 8px;
+      }
+      .login-fields input {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #d7dde1;
+        font-size: 0.85rem;
+      }
+      .login-message {
+        min-height: 16px;
+        color: #c0392b;
+        font-size: 0.78rem;
+        margin-top: 6px;
+      }
+      .login-btn {
+        width: 100%;
+        margin-top: 6px;
+        border-radius: 999px;
+        background: #2ecc75;
+        color: #0d2b19;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>店大教育部作成 - ミセフィルタ</h1>
+    <p id="url" class="badge">URL を取得中...</p>
+    <p id="roleHint">権限: 未ログイン</p>
+
+    <div id="modeSwitch" class="segmented" data-mode="allow" role="radiogroup" aria-label="クイック操作">
+      <button id="allowBtn" class="segment active" data-mode="allow" type="button">許可</button>
+      <button id="blockBtn" class="segment" data-mode="block" type="button">ブロック</button>
+      <span class="thumb" aria-hidden="true"></span>
+    </div>
+
+    <p id="status"></p>
+
+    <div id="loginPanel" class="login-panel">
+      <div class="login-title">ログインしてください</div>
+      <div class="login-fields">
+        <input id="loginSchoolId" type="text" placeholder="学校ID" autocomplete="organization" />
+        <input id="loginId" type="text" placeholder="ID" autocomplete="username" />
+        <input id="loginPassword" type="password" placeholder="パスワード" autocomplete="current-password" />
+      </div>
+      <div class="login-message" id="loginMessage"></div>
+      <button class="login-btn" id="loginBtn">ログイン</button>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+      <button id="authBtn" class="ghost">ログイン</button>
+      <button id="openOptions" class="ghost">管理画面を開く</button>
+    </div>
+
+    <script src="cloud.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

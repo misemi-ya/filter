@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Mise Filter",
+  "version": "0.2.1",
+  "description": "School web filter extension with local-only settings.",
+  "permissions": ["storage", "tabs", "activeTab", "alarms"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_title": "Mise Filter",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "ok.png",
+      "32": "ok.png",
+      "48": "ok.png"
+    }
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["categories.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
